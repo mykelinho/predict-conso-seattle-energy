@@ -1,8 +1,8 @@
 # test_api.py
 import requests
 
-# 1. Vérifiez bien le "https://" et le "/predict" à la fin
-# (Remplacez par le nom exact de votre service si différent)
+# Ne pas oublier "https://" et le "/predict" à la fin
+# (Remplacez par http://localhost:3000/predict en local)
 URL = "https://predict-conso-seattle-energy.onrender.com/predict"
 
 print("=" * 60)
