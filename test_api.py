@@ -1,8 +1,8 @@
 # test_api.py
 import requests
 
-# URL locale du serveur BentoML
-#URL = "http://localhost:3000/predict"
+# 1. Vérifiez bien le "https://" et le "/predict" à la fin
+# (Remplacez par le nom exact de votre service si différent)
 URL = "https://predict-conso-seattle-energy.onrender.com/predict"
 
 print("=" * 60)
@@ -26,8 +26,11 @@ payload_valide = {
 
 res_1 = requests.post(URL, json=payload_valide)
 print(f"Code HTTP reçu : {res_1.status_code} (Attendu: 200)")
-print("Réponse de l'API :")
-print(res_1.json())
+
+try:
+    print("Réponse JSON :", res_1.json())
+except Exception:
+    print("Réponse brute (Texte) :", res_1.text)
 
 
 print("\n" + "=" * 60)
@@ -41,5 +44,8 @@ payload_invalide = {
 
 res_2 = requests.post(URL, json=payload_invalide)
 print(f"Code HTTP reçu : {res_2.status_code} (Attendu: 400 ou 422)")
-print("Réponse de l'API :")
-print(res_2.json())
+
+try:
+    print("Réponse JSON :", res_2.json())
+except Exception:
+    print("Réponse brute (Texte) :", res_2.text)
