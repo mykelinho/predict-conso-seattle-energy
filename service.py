@@ -21,7 +21,6 @@ _orig_from_yaml_file = bento_pkg.BaseBentoInfo.from_yaml_file
 
 @classmethod
 def _safe_from_yaml_file(cls, stream):
-    # Repositionnement au début si c'est un flux déjà ouvert
     if hasattr(stream, "seek"):
         try:
             stream.seek(0)
@@ -40,7 +39,6 @@ def _safe_from_yaml_file(cls, stream):
         if "version" not in data:
             data["version"] = "latest"
 
-    # Si le flux provient d'un fichier réel sur le disque, on synchronise le fichier
     if hasattr(stream, "name") and isinstance(stream.name, str):
         try:
             with open(stream.name, "w", encoding="utf-8") as f_disk:
@@ -127,7 +125,7 @@ class SeattleEnergyService:
         HasGas: int = 1,
         HasSteam: int = 1
     ) -> dict:
-        # 1. Validation stricte via Pydantic
+        # 1. Validation stricte via Pydantic avec explication des seuils tolérés
         try:
             validated = BuildingInput(
                 PropertyGFATotal=PropertyGFATotal,
@@ -144,7 +142,29 @@ class SeattleEnergyService:
                 HasSteam=HasSteam
             )
         except ValidationError as e:
-            raise InvalidArgument(f"Données rejetées par Pydantic : {e.errors()}")
+            details = []
+            for err in e.errors():
+                field = ".".join(str(loc) for loc in err.get("loc", []))
+                valeur = err.get("input")
+                err_type = err.get("type", "")
+                ctx = err.get("ctx", {})
+
+                if "greater_than_equal" in err_type:
+                    details.append(f"[{field}] Valeur reçue : {valeur} -> la valeur minimale tolérée est {ctx.get('ge')}.")
+                elif "greater_than" in err_type:
+                    details.append(f"[{field}] Valeur reçue : {valeur} -> la valeur doit être strictement supérieure à {ctx.get('gt')}.")
+                elif "less_than_equal" in err_type:
+                    details.append(f"[{field}] Valeur reçue : {valeur} -> la valeur maximale tolérée est {ctx.get('le')}.")
+                elif "less_than" in err_type:
+                    details.append(f"[{field}] Valeur reçue : {valeur} -> la valeur doit être strictement inférieure à {ctx.get('lt')}.")
+                elif "literal_error" in err_type:
+                    attendus = ctx.get("expected", "")
+                    details.append(f"[{field}] Valeur reçue : '{valeur}' non reconnue -> options valides : {attendus}.")
+                else:
+                    details.append(f"[{field}] Valeur reçue : {valeur} -> {err.get('msg')}.")
+
+            message_complet = "Données rejetées par l'API :\n- " + "\n- ".join(details)
+            raise InvalidArgument(message_complet)
 
         data = validated.model_dump()
 
