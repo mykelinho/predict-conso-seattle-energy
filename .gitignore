@@ -1,0 +1,5 @@
+echo __pycache__/ > .gitignore
+echo *.pyc >> .gitignore
+echo .bentoml/ >> .gitignore
+echo bentoml/ >> .gitignore
+echo .pytest_cache/ >> .gitignore
