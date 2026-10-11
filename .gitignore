@@ -1,5 +1,19 @@
-echo __pycache__/ > .gitignore
-echo *.pyc >> .gitignore
-echo .bentoml/ >> .gitignore
-echo bentoml/ >> .gitignore
-echo .pytest_cache/ >> .gitignore
+# Fichiers compilés Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Dossiers et caches BentoML
+.bentoml/
+bentoml/
+
+# Caches de tests et IDE
+.pytest_cache/
+.vscode/
+.idea/
+
+# Environnements virtuels
+.venv/
+env/
+venv/
+ENV/
