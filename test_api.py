@@ -3,7 +3,7 @@ import requests
 
 # URL locale du serveur BentoML
 #URL = "http://localhost:3000/predict"
-URL = "https://predict-conso-seattle-energy.onrender.com/"
+URL = "https://predict-conso-seattle-energy.onrender.com/predict"
 
 print("=" * 60)
 print("TEST 1 : Données valides (Cas nominal d'un hôtel à Seattle)")
