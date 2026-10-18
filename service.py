@@ -119,13 +119,13 @@ class SeattleEnergyService:
     @bentoml.api
     def predict(
         self,
-        PropertyGFATotal: float = 88434.0,
-        YearBuilt: int = 1927,
+        PropertyGFATotal: float = 55000.0,
+        YearBuilt: int = 2015,
         NumberofBuildings: int = 1,
-        NumberofFloors: int = 12,
+        NumberofFloors: int = 10,
         PropertyGFAParking: float = 0.0,
-        PropertyGFABuilding: float = 88434.0,
-        LargestPropertyUseTypeGFA: float = 88434.0,
+        PropertyGFABuilding: float = 55000.0,
+        LargestPropertyUseTypeGFA: float = 55000.0,
         PrimaryPropertyType: str = "Hotel",
         BuildingType: str = "NonResidential",
         Neighborhood: str = "DOWNTOWN",
@@ -191,6 +191,7 @@ class SeattleEnergyService:
         # Calcul dynamique de l'âge par rapport à l'année en cours (permet aux années >= 2016 de faire varier la prédiction)
         current_year = datetime.now().year
         building_age = max(current_year - data["YearBuilt"], 0)
+        print(f"--> [DEBUG API] YearBuilt saisi: {data['YearBuilt']} | Âge calculé: {building_age} ans")
 
         parking_ratio = (
             np.clip(data["PropertyGFAParking"] / data["PropertyGFATotal"], 0.0, 1.0)
