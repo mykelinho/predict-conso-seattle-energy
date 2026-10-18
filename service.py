@@ -119,13 +119,13 @@ class SeattleEnergyService:
     @bentoml.api
     def predict(
         self,
-        PropertyGFATotal: float = 88434.0,
-        YearBuilt: int = 1927,
+        PropertyGFATotal: float = 55000.0,
+        YearBuilt: int = 1985,
         NumberofBuildings: int = 1,
         NumberofFloors: int = 12,
         PropertyGFAParking: float = 0.0,
-        PropertyGFABuilding: float = 88434.0,
-        LargestPropertyUseTypeGFA: float = 88434.0,
+        PropertyGFABuilding: float = 55000.0,
+        LargestPropertyUseTypeGFA: float = 55000.0,
         PrimaryPropertyType: str = "Hotel",
         BuildingType: str = "NonResidential",
         Neighborhood: str = "DOWNTOWN",
