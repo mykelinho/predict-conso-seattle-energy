@@ -119,13 +119,13 @@ class SeattleEnergyService:
     @bentoml.api
     def predict(
         self,
-        PropertyGFATotal: float = 55000.0,
-        YearBuilt: int = 2015,
+        PropertyGFATotal: float = 88434.0,
+        YearBuilt: int = 1927,
         NumberofBuildings: int = 1,
-        NumberofFloors: int = 10,
+        NumberofFloors: int = 12,
         PropertyGFAParking: float = 0.0,
-        PropertyGFABuilding: float = 55000.0,
-        LargestPropertyUseTypeGFA: float = 55000.0,
+        PropertyGFABuilding: float = 88434.0,
+        LargestPropertyUseTypeGFA: float = 88434.0,
         PrimaryPropertyType: str = "Hotel",
         BuildingType: str = "NonResidential",
         Neighborhood: str = "DOWNTOWN",
@@ -188,7 +188,6 @@ class SeattleEnergyService:
         data = validated.model_dump()
 
         # 2. Je calcule mes variables de Feature Engineering en direct
-        # Calcul dynamique de l'âge par rapport à l'année en cours (permet aux années >= 2016 de faire varier la prédiction)
         current_year = datetime.now().year
         building_age = max(current_year - data["YearBuilt"], 0)
         print(f"--> [DEBUG API] YearBuilt saisi: {data['YearBuilt']} | Âge calculé: {building_age} ans")
@@ -241,6 +240,8 @@ class SeattleEnergyService:
             "status": "success",
             "target_predicted": "SiteEnergyUseWN(kBtu)",
             "building_type": data["PrimaryPropertyType"],
+            "year_built": int(data["YearBuilt"]),
+            "calculated_age": int(building_age),  # <--- Vérification de l'âge directement dans Swagger
             "surface_sqft": float(data["PropertyGFATotal"]),
             "predicted_energy_consumption_kBtu": round(predicted_kbtu, 2),
         }
